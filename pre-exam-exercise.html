@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React getting started</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id='root'></div>
+ 
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script type="text/babel">
+  function ShowUser() {
+
+const[user, setUser] = React.useState([]);
+const[ready, SetReady] = React.useState(true);
+const fetchData = () => {
+    fetch('https://randomuser.me/api')
+    .then(response=> response.json())
+    .then(responseData => {
+    setUser(
+        {
+        firstName: responseData.results[0].name.first,
+        lastName: responseData.results[0].name.last,
+        picture: responseData.results[0].picture.medium
+        });
+    })
+    .catch(err => console.error(err))
+};
+React.useEffect(()=> {
+    fetchData();
+    },
+    []);
+
+if (!ready) {
+    return <p>Loading...</p>
+}else{
+    return(
+     <div>
+       <p> {user.firstName}  {user.lastName}</p>
+        <img src = {user.picture}/>
+        <br/>
+        <button onClick = {()=> fetchData()}>Get User</button>
+    </div>
+    )}};
+
+ReactDOM.render(<ShowUser/>, document.getElementById("root"));
+    </script>
+  </body>
+</html>

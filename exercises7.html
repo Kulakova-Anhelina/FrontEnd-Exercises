@@ -1,0 +1,49 @@
+<!-- Fetch astronomy picture of the day from NASA API -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React NASA APOD</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+function LocalWeather() {
+  const [temp, setTemp] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [icon, setIcon] = React.useState('');
+      
+        
+  React.useEffect(() => {
+    fetch('http://api.openweathermap.org/data/2.5/weather?q=Helsinki&APPID&units=metric&appid=3df8f9ef77b130c2eab9e46085ebee2a')
+      .then(response => response.json()) 
+      .then(responseData => { 
+        setDescription(responseData.weather[0].description);
+        setTemp(responseData.main.temp);
+        setIcon(responseData.weather[0].icon);
+      
+          });
+        }, [])
+
+       
+  const picture ='http://openweathermap.org/img/wn/' + icon  + '@2x.png' 
+        return (
+          <div>
+            <p>Helsinki weather</p>
+            <p>Temperature: {temp} Celsius</p>
+            <p>Weather: {description}</p>
+            <img src={picture}/>
+          </div>
+        );
+      };
+
+      ReactDOM.render(<LocalWeather />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

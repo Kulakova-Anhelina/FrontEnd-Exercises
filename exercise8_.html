@@ -1,0 +1,91 @@
+<!-- Fetch astronomy picture of the day from NASA API -->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>React Weather App</title>
+</head>
+
+<body>
+  <!-- Root container for react components -->
+  <div id="root"></div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+  <script type="text/babel">
+
+  function WeatherApp() {
+
+  const[city, setCity] = React.useState('');
+  const [temperature, setTemp] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [icon, setIcon] = React.useState('');
+  const [error, setError] = React.useState('');
+  const [text,setText] = React.useState('');
+  const[isReady,setReady]= React.useState(false);
+
+  const apiKey = '3df8f9ef77b130c2eab9e46085ebee2a'
+
+
+  const onChangeInput = (event) => {
+            setCity(event.target.value);
+      
+            
+        }
+
+ function fetchData(e){
+   e.preventDefault();
+
+
+fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${apiKey}&units=metric`)
+   .then(response => response.json())
+   .then(responseData => { 
+     if(city){
+            setText(city)
+            setDescription(responseData.weather[0].description);
+            setTemp(responseData.main.temp);
+            setIcon(responseData.weather[0].icon);
+            setReady(true)
+            setError('')
+     }else{
+            setText(''),
+            setDescription('');
+            setTemp('');
+            setIcon('');
+            setError('Please enter value')
+     }
+            })
+          
+   }
+   
+
+   const picture ='http://openweathermap.org/img/wn/' + icon  + '@2x.png' 
+   return (
+      <div>
+       <form onSubmit = {fetchData}>
+       <input type="text"  value={city} onChange={onChangeInput} placeholder = "city"/>
+       <input type="submit" value="Get Weather"/>
+      </form>
+      <div>
+        {text && <h2> {text}  weather</h2>}
+        {temperature  && <p>Temperature: {temperature} C</p>}
+        {description  && <p>Description: {description} </p>}
+        {icon && <img src={picture}/>}
+        {error}
+      </div>
+
+    </div>
+    
+   )
+
+  }
+ 
+ 
+      ReactDOM.render(<WeatherApp />, document.getElementById("root"));
+    </script>
+</body>
+
+</html>

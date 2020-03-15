@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+    function CheckAge() {
+    const[person, setPerson] = React.useState({name: '', age: ''});
+    
+    const inputChanged= (event) => {
+        setPerson({...person, [event.target.name]: event.target.value});
+        };
+    const[text, setText] =  React.useState('');
+            
+        const  validation = (event) => {
+            event.preventDefault();
+            
+            if(person.age >= 18) {
+                setText(`Hello ${person.name}`)
+            } else {
+                setText('You are too young')
+            }
+        }       
+
+        return(
+            <div>
+                <div>{text}</div>
+                <br />
+                <br />
+                <form onSubmit={validation}>
+                <label>   Name: </label>
+                <input type="text" name="name" value={person.name} onChange = {inputChanged}/><br />
+                <label>  Age: </label>
+                <input type="text" name="age" value={person.age} onChange={inputChanged}/><br />
+                <input type="submit" value="submit"/>
+                </form>
+            </div>
+        );
+        };
+
+        ReactDOM.render(<CheckAge />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

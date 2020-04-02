@@ -1,39 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
+import ApolloClient from "apollo-boost";
 import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
 
 function App() {
-  const jobquery = gql`
-    {
-      jobs {
-        cities {
-          name,
-          country{name}
+  const client = new ApolloClient({ uri: "https://api.graphql.jobs" });
+  const [jobs, setJobs] = useState([]);
+
+  client
+    .query({
+      query: gql`
+        {
+          jobs {
+            cities {
+              name
+              country {
+                name
+              }
+            }
+          }
         }
-      }
-    }
-  `;
-
-  const { loading, error, data } = useQuery(jobquery);
-
-  if (loading)
-    // If still loading
-    return "Loading...";
-  if (error)
-    // It there came an error
-    return `Error ${error.message}`;
+      `
+    })
+    .then(result => setJobs(result.data.jobs));
 
   return (
-    // When there is data
     <div className="App">
       <table>
         <tbody>
-          {data.jobs.map((job, index) => (
+          {jobs.map((job, index) => (
             <tr key={index}>
               <td>{job.cities.name}</td>
               <td>{job.cities.country.name}</td>
-              
+              <td>
+                <a href={job.applyUrl}>{job.applyUrl}</a>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -41,5 +42,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
